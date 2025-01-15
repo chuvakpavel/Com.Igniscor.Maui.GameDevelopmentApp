@@ -9,7 +9,7 @@ internal enum HydraAnimationStates
     OneHundredEightyDegreesWalk,
     TwoHundredTwentyFiveDegreesWalk,
     TwoHundredSeventyDegreesWalk,
-    TreeHundredFiftyDegreesWalk,
+    ThreeHundredFifteenDegreesWalk,
     ZeroDegreesIdle,
     FortyFiveDegreesIdle,
     NinetyDegreesIdle,
@@ -17,7 +17,7 @@ internal enum HydraAnimationStates
     OneHundredEightyDegreesIdle,
     TwoHundredTwentyFiveDegreesIdle,
     TwoHundredSeventyDegreesIdle,
-    TreeHundredFiftyDegreesIdle,
+    ThreeHundredFifteenDegreesIdle,
     ZeroDegreesAttack,
     FortyFiveDegreesAttack,
     NinetyDegreesAttack,
@@ -25,5 +25,5 @@ internal enum HydraAnimationStates
     OneHundredEightyDegreesAttack,
     TwoHundredTwentyFiveDegreesAttack,
     TwoHundredSeventyDegreesAttack,
-    TreeHundredFiftyDegreesAttack
+    ThreeHundredFifteenDegreesAttack
 }

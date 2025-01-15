@@ -17,7 +17,7 @@ internal static partial class Constants
         public const string OneHundredEightyHydraWalk = "Hydra/180HydraWalk.png";
         public const string TwoHundredTwentyFiveHydraWalk = "Hydra/225HydraWalk.png";
         public const string TwoHundredSeventyHydraWalk = "Hydra/270HydraWalk.png";
-        public const string TreeHundredFiftyHydraWalk = "Hydra/315HydraWalk.png";
+        public const string ThreeHundredFifteenHydraWalk = "Hydra/315HydraWalk.png";
 
         #endregion Walk
 
@@ -30,7 +30,7 @@ internal static partial class Constants
         public const string OneHundredEightyHydraIdle = "Hydra/180HydraIdle.png";
         public const string TwoHundredTwentyFiveHydraIdle = "Hydra/225HydraIdle.png";
         public const string TwoHundredSeventyHydraIdle = "Hydra/270HydraIdle.png";
-        public const string TreeHundredFiftyHydraIdle = "Hydra/315HydraIdle.png";
+        public const string ThreeHundredFifteenHydraIdle = "Hydra/315HydraIdle.png";
 
         #endregion Idle
 
@@ -43,7 +43,7 @@ internal static partial class Constants
         public const string OneHundredEightyHydraAttack = "Hydra/180HydraAttack.png";
         public const string TwoHundredTwentyFiveHydraAttack = "Hydra/225HydraAttack.png";
         public const string TwoHundredSeventyHydraAttack = "Hydra/270HydraAttack.png";
-        public const string TreeHundredFiftyHydraAttack = "Hydra/315HydraAttack.png";
+        public const string ThreeHundredFifteenHydraAttack = "Hydra/315HydraAttack.png";
 
         #endregion Attack
 
@@ -60,7 +60,7 @@ internal static partial class Constants
         public const string OneHundredEightyHydraWalkShadow = "Hydra/180HydraWalkShadow.png";
         public const string TwoHundredTwentyFiveHydraWalkShadow = "Hydra/225HydraWalkShadow.png";
         public const string TwoHundredSeventyHydraWalkShadow = "Hydra/270HydraWalkShadow.png";
-        public const string TreeHundredFiftyHydraWalkShadow = "Hydra/315HydraWalkShadow.png";
+        public const string ThreeHundredFifteenHydraWalkShadow = "Hydra/315HydraWalkShadow.png";
 
         #endregion Walk
 
@@ -73,7 +73,7 @@ internal static partial class Constants
         public const string OneHundredEightyHydraIdleShadow = "Hydra/180HydraIdleShadow.png";
         public const string TwoHundredTwentyFiveHydraIdleShadow = "Hydra/225HydraIdleShadow.png";
         public const string TwoHundredSeventyHydraIdleShadow = "Hydra/270HydraIdleShadow.png";
-        public const string TreeHundredFiftyHydraIdleShadow = "Hydra/315HydraIdleShadow.png";
+        public const string ThreeHundredFifteenHydraIdleShadow = "Hydra/315HydraIdleShadow.png";
 
         #endregion Idle
 
@@ -86,7 +86,7 @@ internal static partial class Constants
         public const string OneHundredEightyHydraAttackShadow = "Hydra/180HydraAttackShadow.png";
         public const string TwoHundredTwentyFiveHydraAttackShadow = "Hydra/225HydraAttackShadow.png";
         public const string TwoHundredSeventyHydraAttackShadow = "Hydra/270HydraAttackShadow.png";
-        public const string TreeHundredFiftyHydraAttackShadow = "Hydra/315HydraAttackShadow.png";
+        public const string ThreeHundredFifteenHydraAttackShadow = "Hydra/315HydraAttackShadow.png";
 
         #endregion Attack
 

@@ -18,7 +18,7 @@ internal class HydraTileSetManager : BaseTileSetManager
         OneHundredEightyHydraWalk,
         TwoHundredTwentyFiveHydraWalk,
         TwoHundredSeventyHydraWalk,
-        TreeHundredFiftyHydraWalk,
+        ThreeHundredFifteenHydraWalk,
         ZeroHydraIdle,
         FortyFiveHydraIdle,
         NinetyHydraIdle,
@@ -26,7 +26,7 @@ internal class HydraTileSetManager : BaseTileSetManager
         OneHundredEightyHydraIdle,
         TwoHundredTwentyFiveHydraIdle,
         TwoHundredSeventyHydraIdle,
-        TreeHundredFiftyHydraIdle,
+        ThreeHundredFifteenHydraIdle,
         ZeroHydraWalkShadow,
         FortyFiveHydraWalkShadow,
         NinetyHydraWalkShadow,
@@ -34,7 +34,7 @@ internal class HydraTileSetManager : BaseTileSetManager
         OneHundredEightyHydraWalkShadow,
         TwoHundredTwentyFiveHydraWalkShadow,
         TwoHundredSeventyHydraWalkShadow,
-        TreeHundredFiftyHydraWalkShadow,
+        ThreeHundredFifteenHydraWalkShadow,
         ZeroHydraIdleShadow,
         FortyFiveHydraIdleShadow,
         NinetyHydraIdleShadow,
@@ -42,7 +42,7 @@ internal class HydraTileSetManager : BaseTileSetManager
         OneHundredEightyHydraIdleShadow,
         TwoHundredTwentyFiveHydraIdleShadow,
         TwoHundredSeventyHydraIdleShadow,
-        TreeHundredFiftyHydraIdleShadow,
+        ThreeHundredFifteenHydraIdleShadow,
         ZeroHydraAttack,
         FortyFiveHydraAttack,
         NinetyHydraAttack,
@@ -50,7 +50,7 @@ internal class HydraTileSetManager : BaseTileSetManager
         OneHundredEightyHydraAttack,
         TwoHundredTwentyFiveHydraAttack,
         TwoHundredSeventyHydraAttack,
-        TreeHundredFiftyHydraAttack,
+        ThreeHundredFifteenHydraAttack,
         ZeroHydraAttackShadow,
         FortyFiveHydraAttackShadow,
         NinetyHydraAttackShadow,
@@ -58,7 +58,7 @@ internal class HydraTileSetManager : BaseTileSetManager
         OneHundredEightyHydraAttackShadow,
         TwoHundredTwentyFiveHydraAttackShadow,
         TwoHundredSeventyHydraAttackShadow,
-        TreeHundredFiftyHydraAttackShadow
+        ThreeHundredFifteenHydraAttackShadow
     };
     public HydraTileSetManager(int tileWidth, int tileHeight) : base(TileSetsImagePaths, tileWidth, tileHeight)
     {
@@ -96,9 +96,9 @@ internal class HydraTileSetManager : BaseTileSetManager
                 TileSets[FileNames.FindIndex(str => str == TwoHundredSeventyHydraWalk)],
                 TileSets[FileNames.FindIndex(str => str == TwoHundredSeventyHydraWalkShadow)]),
 
-            HydraAnimationStates.TreeHundredFiftyDegreesWalk => (
-                TileSets[FileNames.FindIndex(str => str == TreeHundredFiftyHydraWalk)],
-                TileSets[FileNames.FindIndex(str => str == TreeHundredFiftyHydraWalkShadow)]),
+            HydraAnimationStates.ThreeHundredFifteenDegreesWalk => (
+                TileSets[FileNames.FindIndex(str => str == ThreeHundredFifteenHydraWalk)],
+                TileSets[FileNames.FindIndex(str => str == ThreeHundredFifteenHydraWalkShadow)]),
 
             HydraAnimationStates.ZeroDegreesIdle => (TileSets[FileNames.FindIndex(str => str == ZeroHydraIdle)],
                 TileSets[FileNames.FindIndex(str => str == ZeroHydraIdleShadow)]),
@@ -126,9 +126,9 @@ internal class HydraTileSetManager : BaseTileSetManager
                 TileSets[FileNames.FindIndex(str => str == TwoHundredSeventyHydraIdle)],
                 TileSets[FileNames.FindIndex(str => str == TwoHundredSeventyHydraIdleShadow)]),
 
-            HydraAnimationStates.TreeHundredFiftyDegreesIdle => (
-                TileSets[FileNames.FindIndex(str => str == TreeHundredFiftyHydraIdle)],
-                TileSets[FileNames.FindIndex(str => str == TreeHundredFiftyHydraIdleShadow)]),
+            HydraAnimationStates.ThreeHundredFifteenDegreesIdle => (
+                TileSets[FileNames.FindIndex(str => str == ThreeHundredFifteenHydraIdle)],
+                TileSets[FileNames.FindIndex(str => str == ThreeHundredFifteenHydraIdleShadow)]),
 
             _ => (null, null)
         };
@@ -166,9 +166,9 @@ internal class HydraTileSetManager : BaseTileSetManager
             HydraAnimationStates.TwoHundredSeventyDegreesAttack => (
                 TileSets[FileNames.FindIndex(str => str == TwoHundredSeventyHydraAttack)],
                 TileSets[FileNames.FindIndex(str => str == TwoHundredSeventyHydraAttackShadow)]),
-            HydraAnimationStates.TreeHundredFiftyDegreesAttack => (
-                TileSets[FileNames.FindIndex(str => str == TreeHundredFiftyHydraAttack)],
-                TileSets[FileNames.FindIndex(str => str == TreeHundredFiftyHydraAttackShadow)]),
+            HydraAnimationStates.ThreeHundredFifteenDegreesAttack => (
+                TileSets[FileNames.FindIndex(str => str == ThreeHundredFifteenHydraAttack)],
+                TileSets[FileNames.FindIndex(str => str == ThreeHundredFifteenHydraAttackShadow)]),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
@@ -184,7 +184,7 @@ internal class HydraTileSetManager : BaseTileSetManager
             > 0 when xDirection == 0 => HydraAnimationStates.OneHundredEightyDegreesAttack,
             > 0 => HydraAnimationStates.TwoHundredTwentyFiveDegreesAttack,
             0 => HydraAnimationStates.TwoHundredSeventyDegreesAttack,
-            < 0 => HydraAnimationStates.TreeHundredFiftyDegreesAttack
+            < 0 => HydraAnimationStates.ThreeHundredFifteenDegreesAttack
         };
     }
 
@@ -217,7 +217,7 @@ internal class HydraTileSetManager : BaseTileSetManager
                 _currentState = HydraAnimationStates.TwoHundredSeventyDegreesWalk;
                 break;
             case < 0:
-                _currentState = HydraAnimationStates.TreeHundredFiftyDegreesWalk;
+                _currentState = HydraAnimationStates.ThreeHundredFifteenDegreesWalk;
                 break;
         }
     }
@@ -242,8 +242,8 @@ internal class HydraTileSetManager : BaseTileSetManager
                 HydraAnimationStates.TwoHundredTwentyFiveDegreesIdle,
             HydraAnimationStates.TwoHundredSeventyDegreesWalk or HydraAnimationStates.TwoHundredSeventyDegreesAttack =>
                 HydraAnimationStates.TwoHundredSeventyDegreesIdle,
-            HydraAnimationStates.TreeHundredFiftyDegreesWalk or HydraAnimationStates.TreeHundredFiftyDegreesAttack =>
-                HydraAnimationStates.TreeHundredFiftyDegreesIdle,
+            HydraAnimationStates.ThreeHundredFifteenDegreesWalk or HydraAnimationStates.ThreeHundredFifteenDegreesAttack =>
+                HydraAnimationStates.ThreeHundredFifteenDegreesIdle,
             _ => previousState
         };
     }
