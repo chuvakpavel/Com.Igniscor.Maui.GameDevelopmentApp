@@ -1,65 +1,41 @@
-﻿using HungerHydra.Factories;
-using HungerHydra.Helpers;
-using HungerHydra.Models.TileModels;
-using SkiaSharp;
-using SkiaSharp.Views.Maui;
+﻿using HungerHydra.ViewModel;
+using System.Numerics;
 
 namespace HungerHydra.Views;
 
-public partial class MainPage
+public partial class GamePage
 {
-    private int _animationIndex;
+    private readonly GameViewModel _viewModel;
 
-    private int AnimationIndex
+    public GamePage()
     {
-        get => _animationIndex;
-        set => _animationIndex = _animationIndex < _tileSet.TilesCount - 1 ? value : 0;
-    }
-
-    private readonly TileSet _tileSet;
-
-    private const int TileSize = 256;
-    private const float AnimationCycleTime = 33.3f;
-
-    private bool _pageIsActive;
-
-    public MainPage()
-    {
-        _pageIsActive = false;
         InitializeComponent();
 
-        var imageData = Task.Run(() => FileReader.GetImageData(Constants.Images.ZeroHydraWalk)).Result;
+        BindingContext = _viewModel = new GameViewModel();
 
-        _tileSet = TileSetFactory.CreateTileSet(TileSize, TileSize, imageData);
-
-        AnimationIndex = 0;
-
-        HydraCanvas.PaintSurface += HydraCanvasPaintSurface;
+        HydraCanvas.PaintSurface += _viewModel.HydraCanvasPaintSurface;
     }
 
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        _pageIsActive = true;
 
-        Dispatcher.StartTimer(TimeSpan.FromMilliseconds(AnimationCycleTime), () =>
-        {
-            HydraCanvas.InvalidateSurface();
-
-            AnimationIndex++;
-            
-            return _pageIsActive;
-        });
+        _viewModel.StartAnimationLoop(this, HydraCanvas);
     }
 
-    private void HydraCanvasPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
+    protected override void OnSizeAllocated(double width, double height)
     {
-        var surface = args.Surface;
-        var canvas = surface.Canvas;
+        base.OnSizeAllocated(width, height);
+        _viewModel.SetPosition((float)width, (float)height * 10 / 11);
+    }
 
-        canvas.Clear();
-
-        canvas.DrawBitmap(_tileSet.TilesBitmap, _tileSet.TilesData[AnimationIndex].TileRect,
-            new SKRect(0, 0, TileSize * 4, TileSize * 4));
+    private void TapGestureRecognizer_Tapped(object? sender, TappedEventArgs e)
+    {
+        var relativeToContainerPosition = e.GetPosition((View?)sender);
+        if (relativeToContainerPosition != null)
+        {
+            _viewModel.TapPoint = new Vector2((float)relativeToContainerPosition.Value.X,
+                (float)relativeToContainerPosition.Value.Y);
+        }
     }
 }
