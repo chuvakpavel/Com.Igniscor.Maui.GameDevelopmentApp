@@ -14,13 +14,16 @@ public partial class GamePage
         BindingContext = _viewModel = new GameViewModel();
 
         HydraCanvas.PaintSurface += _viewModel.HydraCanvasPaintSurface;
+        SpiderCanvas.PaintSurface += _viewModel.SpiderCanvasPaintSurface;
     }
 
     protected override void OnAppearing()
     {
         base.OnAppearing();
 
-        _viewModel.StartAnimationLoop(this, HydraCanvas);
+        _viewModel.StartAnimationLoop(this, HydraCanvas, SpiderCanvas);
+        _viewModel.StartLogicLoop(this);
+        _viewModel.StartSpawnLoop(this);
     }
 
     protected override void OnSizeAllocated(double width, double height)
@@ -29,7 +32,9 @@ public partial class GamePage
         _viewModel.SetPosition((float)width, (float)height * 10 / 11);
     }
 
-    private void TapGestureRecognizer_Tapped(object? sender, TappedEventArgs e)
+
+
+    private void HydraCanvasTapped(object? sender, TappedEventArgs e)
     {
         var relativeToContainerPosition = e.GetPosition((View?)sender);
         if (relativeToContainerPosition != null)

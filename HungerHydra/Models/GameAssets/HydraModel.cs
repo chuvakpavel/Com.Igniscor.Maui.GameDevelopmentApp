@@ -2,6 +2,7 @@
 using System.Numerics;
 using HungerHydra.Enums;
 using HungerHydra.Helpers;
+using SkiaSharp;
 using static System.Math;
 
 namespace HungerHydra.Models.GameAssets;
@@ -11,6 +12,13 @@ internal class HydraModel
     private const float TranslationSpeed = 0.5f;
     private const float DeadZoneMax = 6.0f;
     private const float DeadZoneMin = -6.0f;
+    private const float HurtBoxWidth = 176.0f;
+    private const float HurtBoxHeight = 176.0f;
+
+    private int _yAttackDirection;
+    private int _xAttackDirection;
+
+    public int AttackedEnemyId { get; private set; }
 
     private int _animationIndex;
     public readonly float ScaledSize;
@@ -27,7 +35,21 @@ internal class HydraModel
     internal int AnimationIndex
     {
         get => _animationIndex;
-        set => _animationIndex = _animationIndex < CurrentTileSets.Body.TilesCount - 1 ? value : 0;
+        set
+        {
+            if (_animationIndex < CurrentTileSets.Body.TilesCount - 1)
+            {
+                _animationIndex = value;
+            }
+            else
+            {
+                _animationIndex = 0;
+                if (State == HydraState.Attack)
+                {
+                    State = HydraState.Move;
+                }
+            }
+        }
     }
 
     private int _xDirection;
@@ -64,6 +86,11 @@ internal class HydraModel
         }
     }
 
+    public SKRect HurtBox => new(ScaledSize / 2 - HurtBoxWidth / 2 + XTranslate,
+        ScaledSize / 2 - HurtBoxHeight / 2 + YTranslate,
+        ScaledSize / 2 + HurtBoxWidth / 2 + XTranslate,
+        ScaledSize / 2 + HurtBoxHeight / 2 + YTranslate);
+
 
     public HydraModel(float tileSize)
     {
@@ -72,6 +99,7 @@ internal class HydraModel
         XDirection = 0;
         YDirection = 0;
         AnimationIndex = 0;
+        AttackedEnemyId = -1;
         XTranslate = 0.0f;
         YTranslate = 0.0f;
         ScaledSize = tileSize * 2;
@@ -134,5 +162,38 @@ internal class HydraModel
         }
 
         return YTranslate;
+    }
+
+    public void Attack(Vector2 enemyPosition, int enemyIndex)
+    {
+        AttackedEnemyId = enemyIndex;
+        XDirection = 0;
+        YDirection = 0;
+        if (State != HydraState.Attack)
+        {
+            var xDifference = enemyPosition.X - CurrentPoint.X * DeviceDisplay.MainDisplayInfo.Density;
+            var yDifference = enemyPosition.Y - CurrentPoint.Y * DeviceDisplay.MainDisplayInfo.Density;
+
+            _xAttackDirection = 0;
+            _yAttackDirection = 0;
+
+            if (Abs(xDifference) - Abs(yDifference) is < 70 and > -70)
+            {
+                _xAttackDirection = (int)(xDifference / Abs(xDifference));
+                _yAttackDirection = (int)(yDifference / Abs(yDifference));
+            }
+            else if (Abs(xDifference) > Abs(yDifference))
+            {
+                _xAttackDirection = (int)(xDifference / Abs(xDifference));
+            }
+            else if (Abs(xDifference) < Abs(yDifference))
+            {
+                _yAttackDirection = (int)(yDifference / Abs(yDifference));
+            }
+
+            CurrentTileSets = _tileSetManager.GetAttackAnimationTileSets(_xAttackDirection, _yAttackDirection);
+            AnimationIndex = 0;
+            State = HydraState.Attack;
+        }
     }
 }
