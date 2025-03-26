@@ -6,16 +6,98 @@
     xmlns:controls="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
     xmlns:support="clr-namespace:HungerHydra.Views.Support"
     xmlns:helpers="clr-namespace:HungerHydra.Helpers"
+    xmlns:radialProgressBarControl="clr-namespace:RadialProgressBarControl;assembly=RadialProgressBarControl"
+    xmlns:progressBarControl="clr-namespace:ProgressBarControl;assembly=ProgressBarControl"
     x:Class="HungerHydra.Views.GamePage">
 
-    <Grid>
+    <Grid RowDefinitions="*,9*">
+
+        <Grid x:Name="StatusBar"
+              ColumnDefinitions="*,*"
+              RowDefinitions="*,1.5*">
+
+            <Image
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                Grid.ColumnSpan="2"
+                Source="{x:Static helpers:Constants+Images.DirtStatusBarBackGround}"
+                Aspect="AspectFill"
+                VerticalOptions="Start" />
+
+            <progressBarControl:GradientProgressBar
+                Grid.Row="0"
+                Grid.ColumnSpan="2"
+                StartBackgroundColor="#F2E8C6"
+                EndBackgroundColor="#DAD4B5"
+                StartProgressColor="#952323"
+                EndProgressColor="#A73121"
+                Margin="10"
+                PercentageValue="{Binding Satiety}" />
+
+            <Label
+                VerticalOptions="Center"
+                Margin="10,0"
+                Grid.Row="1">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span
+                            TextColor="#F2E8C6"
+                            Text="{x:Static helpers:Constants+Texts.ScoreLabel}" />
+                        <Span
+                            TextColor="#F2E8C6"
+                            Text=": " />
+                        <Span
+                            TextColor="#F2E8C6"
+                            Text="{Binding Score}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+
+            <Grid x:Name="Container"
+                  ColumnDefinitions="*,*"
+                  Grid.Row="1"
+                  Grid.Column="1"
+                  Margin="0,0,0,5">
+
+                <radialProgressBarControl:RadialProgressBar
+                    WidthRequest="{Binding Source={x:Reference Container}, Path=Height}"
+                    HeightRequest="{Binding Source={x:Reference Container}, Path=Height}"
+                    SweepAngle="360"
+                    StartBackgroundColor="#F2E8C6"
+                    EndBackgroundColor="#DAD4B5"
+                    StartColor="#952323"
+                    EndColor="#A73121"
+                    PercentageValue="{Binding ComboProgressBarPercents}" />
+
+                <Label
+                    FontSize="10"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span
+                                Text="X" 
+                                TextColor="#F2E8C6" />
+                            <Span 
+                                Text="{Binding Factor}"
+                                TextColor="#F2E8C6"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+
+            </Grid>
+        </Grid>
+
         <Image x:Name="BackGround"
+               Grid.Row="1"
                Source="{x:Static helpers:Constants+Images.GrassBackGround}"
                Aspect="AspectFill" />
 
-        <controls:SKCanvasView x:Name="SpiderCanvas"/>
+        <controls:SKCanvasView x:Name="SpiderCanvas"
+                               Grid.Row="1" />
 
-        <controls:SKCanvasView x:Name="HydraCanvas">
+        <controls:SKCanvasView x:Name="HydraCanvas"
+                               Grid.Row="1">
 
             <controls:SKCanvasView.GestureRecognizers>
 
@@ -23,4 +105,5 @@
             </controls:SKCanvasView.GestureRecognizers>
         </controls:SKCanvasView>
     </Grid>
+
 </support:NavBarlesPage>

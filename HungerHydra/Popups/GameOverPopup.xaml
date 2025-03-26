@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<abstractions:BasePopup
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:HungerHydra.Helpers"
+    xmlns:abstractions="clr-namespace:HungerHydra.Abstractions"
+    xmlns:viewModel="clr-namespace:HungerHydra.ViewModel"
+    x:TypeArguments="helpers:DialogReturnValue"
+    x:Class="HungerHydra.Popups.GameOverPopup"
+    x:DataType="viewModel:GameOverViewModel"
+    CloseWhenBackgroundIsClicked="False">
+
+    <Border
+        Margin="10,0"
+        VerticalOptions="Center"
+        Stroke="Transparent">
+
+        <Grid>
+
+            <Image
+                HeightRequest="{Binding Source={x:Reference MainContent}, 
+                                        Path=Height}"
+                WidthRequest="{Binding Source={x:Reference MainContent}, 
+                                       Path=Width}"
+                Source="{x:Static helpers:Constants+Images.DirtStatusBarBackGround}"
+                Grid.Row="0"
+                Aspect="AspectFill" />
+
+            <Grid
+                x:Name="MainContent"
+                RowDefinitions="Auto,Auto,Auto,Auto"
+                VerticalOptions="Center">
+
+
+                <Label
+                    Grid.Row="0"
+                    HorizontalOptions="Center"
+                    FontSize="20"
+                    Text="{Static helpers:Constants+Texts.GameOverPopupTitle}" />
+
+                <Label
+                    Grid.Row="1"
+                    HorizontalOptions="Center">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{Static helpers:Constants+Texts.CurrentScoreLabel}" />
+                            <Span Text="{Binding Score}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+
+                <Label
+                    Grid.Row="2"
+                    HorizontalOptions="Center">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{Static helpers:Constants+Texts.HighScoreLabel}" />
+                            <Span Text="{Binding HighScore}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+
+                <Grid
+                    ColumnDefinitions="*,*"
+                    Margin="5"
+                    ColumnSpacing="2"
+                    HorizontalOptions="Fill"
+                    Grid.Row="3">
+                    
+                    <Button
+                        Text="{Static helpers:Constants+Texts.Retry}"
+                        Clicked="OnPositiveButtonClicked" />
+                    
+                    <Button
+                        Grid.Column="1"
+                        Text="{Static helpers:Constants+Texts.MainMenu}"
+                        Clicked="OnNegativeButtonClicked" />
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+</abstractions:BasePopup>

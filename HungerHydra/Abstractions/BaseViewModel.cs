@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace HungerHydra.Abstractions;
 
-    internal abstract class BaseViewModel : INotifyPropertyChanged
+    public abstract class BaseViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 

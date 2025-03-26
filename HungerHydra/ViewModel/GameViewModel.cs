@@ -2,6 +2,8 @@
 using HungerHydra.Enums;
 using HungerHydra.Helpers;
 using HungerHydra.Models.GameAssets;
+using HungerHydra.Popups;
+using HungerHydra.Views;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 using System.Numerics;
@@ -11,13 +13,14 @@ namespace HungerHydra.ViewModel;
 internal class GameViewModel : BaseViewModel
 {
 #if DEBUG
-    private static SKPaint _debugPaint = new SKPaint { Color = new SKColor(255, 0, 0), Style = SKPaintStyle.Stroke };
+    private static readonly SKPaint DebugPaint = new SKPaint { Color = new SKColor(255, 0, 0), Style = SKPaintStyle.Stroke };
 #endif
     private Vector2 _tapPoint;
     private readonly List<SpiderModel> _spiders;
     private readonly SpiderTileSetManager _spiderTileSetManager;
     private readonly Random _rng;
     private int _spiderCount;
+    private bool _isCombo;
 
     internal Vector2 TapPoint
     {
@@ -32,17 +35,91 @@ internal class GameViewModel : BaseViewModel
         }
     }
 
+    public float Satiety
+    {
+        get => _hydra.Satiety;
+        set
+        {
+            OnPropertyChanged();
+            if (value < 0)
+            {
+                Task.Run(GameOver);
+                _pageIsActive = false;
+                return;
+            }
+            else if (value > MaxSatiety)
+            {
+                _hydra.Satiety = MaxSatiety;
+                return;
+            }
+
+            _hydra.Satiety = value;
+        }
+    }
+
+    private int _score;
+
+    public int Score
+    {
+        get => _score;
+        set
+        {
+            _score = value;
+            OnPropertyChanged();
+        }
+    }
+
+    private int _factor;
+
+    public int Factor
+    {
+        get => _factor;
+        set
+        {
+            _factor = value > 5 ? 5 : value;
+
+            if (value != 1)
+                ComboProgressBarPercents = 1.0f;
+            OnPropertyChanged();
+        }
+    }
+
+    private float _comboProgressBarPercents;
+
+    public float ComboProgressBarPercents
+    {
+        get => _comboProgressBarPercents;
+        set
+        {
+            _comboProgressBarPercents = value;
+            if (value < 0)
+            {
+                _comboProgressBarPercents = 0.0f;
+                Factor = 1;
+                _isCombo = false;
+            }
+
+            OnPropertyChanged();
+        }
+    }
+
+
+
     private float _gameFieldWidth;
     private float _gameFieldHeight;
 
 
-    private HydraModel _hydra;
+    private readonly HydraModel _hydra;
 
     private const int TileSize = 256;
     private const float AnimationCycleTime = 45.0f;
     private const double LogicCycleTime = 100.0d; // in milliseconds
     private const double SpawnCycleTime = 1000.0d; // in milliseconds
     private const int SpiderLimit = 5;
+    private const float MaxSatiety = 1.5f;
+    private const float SpiderValue = 0.05f;
+    private const float StarvePerSecond = 0.0045f;
+    private const float ComboPerSecond = 0.032f;
 
 
     private bool _pageIsActive;
@@ -55,6 +132,36 @@ internal class GameViewModel : BaseViewModel
         _rng = new Random();
     }
 
+    private async Task GameOver()
+    {
+        _pageIsActive = false;
+
+        var result =
+            await (new GameOverPopup(Score.ToString(), Score.ToString())).ShowAsync();
+
+        switch (result?.Status)
+        {
+            case DialogReturnStatuses.Positive:
+                await Reset();
+                break;
+            case DialogReturnStatuses.Negative:
+
+                break;
+        }
+    }
+
+    private async Task Reset()
+    {
+        await MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            var page = Shell.Current.Navigation.NavigationStack.LastOrDefault();
+
+            await Shell.Current.GoToAsync(nameof(GamePage));
+
+            Shell.Current.Navigation.RemovePage(page);
+        });
+    }
+    
     internal void SetPosition(float width, float height)
     {
         TapPoint = _hydra.CurrentPoint = new Vector2(width / 2, height / 2);
@@ -72,6 +179,9 @@ internal class GameViewModel : BaseViewModel
         {
             hydraCanvas.InvalidateSurface();
             spiderCanvas.InvalidateSurface();
+
+            Satiety -= StarvePerSecond;
+            ComboProgressBarPercents -= ComboPerSecond;
 
             _hydra.AnimationIndex++;
 
@@ -104,12 +214,20 @@ internal class GameViewModel : BaseViewModel
                     }
 
                     if (_hydra.AnimationIndex >= _hydra.CurrentTileSets.Body.TilesCount - 5 &&
-                        _hydra.State == HydraState.Attack && _spiders[i].Id == _hydra.AttackedEnemyId)
+                        _hydra.State == HydraState.Attack && _spiders[i].Id == _hydra.AttackedEnemyId &&
+                        _spiders[i].CurrentState != SpiderState.Die)
                     {
-                        if (_spiders[i].CurrentState != SpiderState.Die)
+                        if (_isCombo)
+                            Factor++;
+                        else
                         {
-                            _spiders[i].Die();
+                            _isCombo = true;
+                            ComboProgressBarPercents = 1.0f;
                         }
+
+                        Satiety += SpiderValue * Factor;
+
+                        _spiders[i].Die();
                     }
                 }
             }
@@ -139,6 +257,8 @@ internal class GameViewModel : BaseViewModel
                 _spiderCount++;
             }
 
+            Score += Factor;
+
             return _pageIsActive;
         });
     }
@@ -159,7 +279,7 @@ internal class GameViewModel : BaseViewModel
                 spider.CurrentTileSets.Body.TilesData[spider.AnimationIndex].TileRect,
                 spider.ScaleRect);
 #if DEBUG
-            canvas.DrawRect(spider.HitBox, _debugPaint);
+            canvas.DrawRect(spider.HitBox, DebugPaint);
 #endif
 
             spider.AnimationIndex++;
@@ -186,7 +306,7 @@ internal class GameViewModel : BaseViewModel
                 _hydra.ScaledSize + yTranslate));
 
 #if DEBUG
-        canvas.DrawRect(_hydra.HurtBox, _debugPaint);
+        canvas.DrawRect(_hydra.HurtBox, DebugPaint);
 #endif
     }
 }

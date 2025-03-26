@@ -21,7 +21,6 @@ internal class HydraModel
     public int AttackedEnemyId { get; private set; }
 
     private int _animationIndex;
-    public readonly float ScaledSize;
     private readonly HydraTileSetManager _tileSetManager;
 
 
@@ -29,6 +28,8 @@ internal class HydraModel
     public (TileSet Body, TileSet Shadow) CurrentTileSets;
     public Vector2 CurrentPoint;
 
+    public readonly float ScaledSize;
+    public float Satiety;
     public float XTranslate;
     public float YTranslate;
 
@@ -104,6 +105,7 @@ internal class HydraModel
         YTranslate = 0.0f;
         ScaledSize = tileSize * 2;
         CurrentPoint = new Vector2(ScaledSize / 2, ScaledSize / 2);
+        Satiety = 1.0f;
     }
 
     public float MoveX(Vector2 tapPoint, float animationCycleTime)

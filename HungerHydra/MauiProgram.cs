@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
+using ProgressBarControl;
+using RadialProgressBarControl;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 
 namespace HungerHydra
@@ -11,6 +13,8 @@ namespace HungerHydra
             builder
                 .UseMauiApp<App>()
                 .UseSkiaSharp()
+                .UseProgressBarControl()
+                .UseRadialProgressBarControl()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
