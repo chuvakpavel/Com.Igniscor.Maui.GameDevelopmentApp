@@ -8,8 +8,7 @@
     Title="HungerHydra">
 
     <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate views:GamePage}"
+        ContentTemplate="{DataTemplate views:MainMenuPage}"
         Route="MainPage" />
 
 </Shell>

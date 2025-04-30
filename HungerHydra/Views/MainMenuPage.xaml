@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<support:NavBarlesPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:support="clr-namespace:HungerHydra.Views.Support"
+    xmlns:helpers="clr-namespace:HungerHydra.Helpers"
+    xmlns:viewModel="clr-namespace:HungerHydra.ViewModel"
+    x:DataType="viewModel:NavigationViewModel"
+    x:Class="HungerHydra.Views.MainMenuPage">
+
+    <Grid>
+        
+        <Image
+            Aspect="AspectFill"
+            Source="{x:Static helpers:Constants+Images.MenuBackGround}" />
+        
+        <VerticalStackLayout
+            Margin="10,0"
+            VerticalOptions="Center">
+            
+            <Label
+                HorizontalOptions="Center"
+                Text="{Static helpers:Constants+Texts.GameTitle}" 
+                FontSize="25"/>
+            
+            <support:NavigationButtonsView
+                ItemsSource="{Binding Items}"
+                Command="{Binding GoToCommand}" />
+            
+        </VerticalStackLayout>
+    </Grid>
+</support:NavBarlesPage>

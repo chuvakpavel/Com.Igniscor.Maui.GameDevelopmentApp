@@ -32,7 +32,10 @@ public partial class GamePage
         _viewModel.SetPosition((float)width, (float)height * 10 / 11);
     }
 
-
+    protected override bool OnBackButtonPressed()
+    {
+        return true;
+    }
 
     private void HydraCanvasTapped(object? sender, TappedEventArgs e)
     {

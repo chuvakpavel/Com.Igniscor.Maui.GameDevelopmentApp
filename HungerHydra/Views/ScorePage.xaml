@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<support:NavBarlesPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:HungerHydra.Helpers"
+    xmlns:viewModel="clr-namespace:HungerHydra.ViewModel"
+    xmlns:support="clr-namespace:HungerHydra.Views.Support"
+    xmlns:models="clr-namespace:HungerHydra.Models"
+    x:Class="HungerHydra.Views.ScorePage"
+    x:DataType="viewModel:ScoreViewModel">
+
+    <Grid RowDefinitions="Auto,*"
+          ColumnDefinitions="*,*">
+
+
+        <Image
+            Grid.ColumnSpan="2"
+            Grid.RowSpan="2"
+            Aspect="AspectFill"
+            Source="{x:Static helpers:Constants+Images.MenuBackGround}" />
+
+        <Button
+            Grid.Column="1"
+            Grid.Row="0"
+            VerticalOptions="Start"
+            HorizontalOptions="End"
+            Text="{Static helpers:Constants+Texts.ClearScore}"
+            Command="{Binding ClearScoreCommand}"
+            Margin="10"
+            BackgroundColor="Transparent" />
+
+        <Button
+            Grid.Column="0"
+            Grid.Row="0"
+            VerticalOptions="Start"
+            HorizontalOptions="Start"
+            Text="&lt;"
+            Command="{Binding GoBackCommand}"
+            Margin="10"
+            BackgroundColor="Transparent" />
+
+        <ScrollView
+            Grid.ColumnSpan="2"
+            Grid.Row="1"
+            Margin="10,10,10,10"
+            HorizontalOptions="Center"
+            VerticalOptions="Center">
+
+            <Grid VerticalOptions="Center">
+
+                <Grid
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    RowDefinitions="Auto,*">
+
+                    <Label
+                        Grid.Row="0"
+                        Text="{Static helpers:Constants+Texts.ScoresTitle}"
+                        HorizontalOptions="Center"
+                        FontSize="20" />
+
+                    <Grid
+                        Grid.Row="1"
+                        ColumnSpacing="20"
+                        ColumnDefinitions="*,*"
+                        RowDefinitions="*,*"
+                        VerticalOptions="Center">
+
+                        <Label
+                            Text="{Static helpers:Constants+Texts.DateLabel}"
+                            HorizontalOptions="Start"
+                            FontSize="20" />
+
+                        <Label
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Text="{Static helpers:Constants+Texts.ScoreLabel}"
+                            HorizontalOptions="End"
+                            FontSize="20" />
+
+                        <VerticalStackLayout
+                            BindableLayout.ItemsSource="{Binding Scores}"
+                            Grid.Column="0"
+                            Grid.Row="1"
+                            Grid.ColumnSpan="2">
+
+                            <BindableLayout.ItemTemplate>
+
+                                <DataTemplate x:DataType="models:Score">
+
+                                    <Grid
+                                        ColumnDefinitions="*,auto"
+                                        ColumnSpacing="50">
+
+                                        <Label
+                                            Grid.Column="0"
+                                            Text="{Binding Date}"
+                                            HorizontalOptions="Start"
+                                            FontSize="20" />
+
+                                        <Label
+                                            Grid.Column="1"
+                                            Text="{Binding Value}"
+                                            HorizontalOptions="Center"
+                                            FontSize="20" />
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </ScrollView>
+
+    </Grid>
+</support:NavBarlesPage>

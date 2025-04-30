@@ -3,6 +3,7 @@ using HungerHydra.Enums;
 using HungerHydra.Helpers;
 using HungerHydra.Models.GameAssets;
 using HungerHydra.Popups;
+using HungerHydra.Services;
 using HungerHydra.Views;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
@@ -13,7 +14,8 @@ namespace HungerHydra.ViewModel;
 internal class GameViewModel : BaseViewModel
 {
 #if DEBUG
-    private static readonly SKPaint DebugPaint = new SKPaint { Color = new SKColor(255, 0, 0), Style = SKPaintStyle.Stroke };
+    private static readonly SKPaint DebugPaint = new SKPaint
+        { Color = new SKColor(255, 0, 0), Style = SKPaintStyle.Stroke };
 #endif
     private Vector2 _tapPoint;
     private readonly List<SpiderModel> _spiders;
@@ -103,8 +105,6 @@ internal class GameViewModel : BaseViewModel
         }
     }
 
-
-
     private float _gameFieldWidth;
     private float _gameFieldHeight;
 
@@ -121,7 +121,6 @@ internal class GameViewModel : BaseViewModel
     private const float StarvePerSecond = 0.0045f;
     private const float ComboPerSecond = 0.032f;
 
-
     private bool _pageIsActive;
 
     internal GameViewModel()
@@ -136,17 +135,27 @@ internal class GameViewModel : BaseViewModel
     {
         _pageIsActive = false;
 
-        var result =
-            await (new GameOverPopup(Score.ToString(), Score.ToString())).ShowAsync();
-
-        switch (result?.Status)
+        RepositoryService.Instance.AddScore(_score);
+        var scoreRepository = RepositoryService.Instance.GetHighScore();
+        if (scoreRepository.Status == RepositoryStatuses.NotFound)
         {
-            case DialogReturnStatuses.Positive:
-                await Reset();
-                break;
-            case DialogReturnStatuses.Negative:
+            Console.WriteLine(scoreRepository.Exception);
+        }
 
-                break;
+        if (scoreRepository.Value != null)
+        {
+            var result =
+                await (new GameOverPopup(_score.ToString(), scoreRepository.Value.Value.ToString())).ShowAsync();
+
+            switch (result?.Status)
+            {
+                case DialogReturnStatuses.Positive:
+                    await Reset();
+                    break;
+                case DialogReturnStatuses.Negative:
+                    await Shell.Current.GoToAsync("..");
+                    break;
+            }
         }
     }
 
@@ -161,7 +170,8 @@ internal class GameViewModel : BaseViewModel
             Shell.Current.Navigation.RemovePage(page);
         });
     }
-    
+
+
     internal void SetPosition(float width, float height)
     {
         TapPoint = _hydra.CurrentPoint = new Vector2(width / 2, height / 2);

@@ -9,6 +9,7 @@ namespace HungerHydra
             InitializeComponent();
 
             Routing.RegisterRoute(nameof(GamePage), typeof(GamePage));
+            Routing.RegisterRoute(nameof(ScorePage), typeof(ScorePage));
         }
     }
 }
