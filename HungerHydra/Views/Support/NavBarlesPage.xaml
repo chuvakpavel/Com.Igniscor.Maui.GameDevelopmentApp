@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ContentPage
+<abstractions:BasePage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:abstractions="clr-namespace:HungerHydra.Abstractions"
     x:Class="HungerHydra.Views.Support.NavBarlesPage"
     Shell.NavBarIsVisible="False"/>

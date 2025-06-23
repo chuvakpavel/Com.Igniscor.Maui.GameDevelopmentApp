@@ -15,6 +15,7 @@ internal class SpiderModel
     public float ScaledSize { get; init; }
     public SpiderState CurrentState { get; set; }
     public required (TileSet Body, TileSet Shadow) CurrentTileSets { get; set; }
+    public SKColor Color { get; set; }
 
 
     private int _animationIndex;
@@ -23,6 +24,7 @@ internal class SpiderModel
     public SpiderModel(SpiderTileSetManager tileSetManager)
     {
         _tileSetManager = tileSetManager;
+        Color = new SKColor(0, 0, 0, 255);
     }
 
     public int AnimationIndex

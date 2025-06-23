@@ -6,9 +6,13 @@
     xmlns:controls="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
     xmlns:support="clr-namespace:HungerHydra.Views.Support"
     xmlns:helpers="clr-namespace:HungerHydra.Helpers"
-    xmlns:radialProgressBarControl="clr-namespace:RadialProgressBarControl;assembly=RadialProgressBarControl"
     xmlns:progressBarControl="clr-namespace:ProgressBarControl;assembly=ProgressBarControl"
-    x:Class="HungerHydra.Views.GamePage">
+    xmlns:radialProgressBarControl="clr-namespace:RadialProgressBarControl;assembly=RadialProgressBarControl"
+    xmlns:viewModel="clr-namespace:HungerHydra.ViewModel"
+    x:DataType="viewModel:GameViewModel"
+    x:Class="HungerHydra.Views.GamePage"
+    x:Name="Page">
+
 
     <Grid RowDefinitions="*,9*">
 
@@ -42,7 +46,7 @@
                     <FormattedString>
                         <Span
                             TextColor="#F2E8C6"
-                            Text="{x:Static helpers:Constants+Texts.ScoreLabel}" />
+                            Text="{Static helpers:Constants+Texts.ScoreLabel}" />
                         <Span
                             TextColor="#F2E8C6"
                             Text=": " />
@@ -76,15 +80,20 @@
                     <Label.FormattedText>
                         <FormattedString>
                             <Span
-                                Text="X" 
+                                Text="X"
                                 TextColor="#F2E8C6" />
-                            <Span 
+                            <Span
                                 Text="{Binding Factor}"
-                                TextColor="#F2E8C6"/>
+                                TextColor="#F2E8C6" />
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
 
+                <ImageButton
+                    Margin="5"
+                    Grid.Column="1"
+                    Source="{x:Static helpers:Constants+Images.PauseIcon}"
+                    Clicked="PauseButtonClicked" />
             </Grid>
         </Grid>
 
@@ -96,6 +105,9 @@
         <controls:SKCanvasView x:Name="SpiderCanvas"
                                Grid.Row="1" />
 
+        <controls:SKCanvasView x:Name="DeadSpiderCanvas"
+                               Grid.Row="1" />
+
         <controls:SKCanvasView x:Name="HydraCanvas"
                                Grid.Row="1">
 
@@ -104,6 +116,16 @@
                 <TapGestureRecognizer Tapped="HydraCanvasTapped" />
             </controls:SKCanvasView.GestureRecognizers>
         </controls:SKCanvasView>
+
+        <Label
+            FontSize="50"
+            Grid.Row="1"
+            Text="{Static helpers:Constants+Texts.StartLabel}"
+            VerticalOptions="Center"
+            HorizontalOptions="Center"
+            IsVisible="{Binding Source={x:Reference Page},
+                                Path=IsPause}" />
+
     </Grid>
 
 </support:NavBarlesPage>

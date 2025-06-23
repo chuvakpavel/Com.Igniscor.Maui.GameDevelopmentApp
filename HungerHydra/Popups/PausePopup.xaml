@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<abstractions:BasePopup
+    x:TypeArguments="helpers:DialogReturnValue" 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:abstractions="clr-namespace:HungerHydra.Abstractions"
+    xmlns:helpers="clr-namespace:HungerHydra.Helpers"
+    x:Class="HungerHydra.Popups.PausePopup"
+    CloseWhenBackgroundIsClicked="False">
+
+    <Border
+        Margin="10,0"
+        VerticalOptions="Center"
+        Stroke="Transparent">
+
+        <Grid>
+
+            <Image
+                HeightRequest="{Binding Source={x:Reference MainContent}, 
+                                        Path=Height}"
+                WidthRequest="{Binding Source={x:Reference MainContent}, 
+                                       Path=Width}"
+                Source="{x:Static helpers:Constants+Images.DirtStatusBarBackGround}"
+                Grid.Row="0"
+                Aspect="AspectFill" />
+
+            <Grid
+                x:Name="MainContent"
+                RowDefinitions="Auto,Auto,Auto,Auto"
+                VerticalOptions="Center">
+
+
+                <Label
+                    Grid.Row="0"
+                    HorizontalOptions="Center"
+                    FontSize="20"
+                    Text="{Static helpers:Constants+Texts.PausePopUpTitle}" />
+
+                <Grid
+                    ColumnDefinitions="*,*"
+                    Margin="5"
+                    ColumnSpacing="2"
+                    HorizontalOptions="Fill"
+                    Grid.Row="3">
+                    
+                    <Button
+                        Text="{Static helpers:Constants+Texts.Continue}"
+                        Clicked="OnPositiveButtonClicked" />
+                    
+                    <Button
+                        Grid.Column="1"
+                        Text="{Static helpers:Constants+Texts.MainMenu}"
+                        Clicked="OnNegativeButtonClicked" />
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+</abstractions:BasePopup>

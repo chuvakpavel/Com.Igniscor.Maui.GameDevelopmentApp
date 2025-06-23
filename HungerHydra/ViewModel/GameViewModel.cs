@@ -23,6 +23,7 @@ internal class GameViewModel : BaseViewModel
     private readonly Random _rng;
     private int _spiderCount;
     private bool _isCombo;
+    private readonly List<SpiderModel> _deadSpiders;
 
     internal Vector2 TapPoint
     {
@@ -46,7 +47,7 @@ internal class GameViewModel : BaseViewModel
             if (value < 0)
             {
                 Task.Run(GameOver);
-                _pageIsActive = false;
+                PageIsActive = false;
                 return;
             }
             else if (value > MaxSatiety)
@@ -121,7 +122,7 @@ internal class GameViewModel : BaseViewModel
     private const float StarvePerSecond = 0.0045f;
     private const float ComboPerSecond = 0.032f;
 
-    private bool _pageIsActive;
+    public bool PageIsActive;
 
     internal GameViewModel()
     {
@@ -129,11 +130,12 @@ internal class GameViewModel : BaseViewModel
         _spiderTileSetManager = new SpiderTileSetManager(TileSize, TileSize);
         _spiders = new List<SpiderModel>();
         _rng = new Random();
+        _deadSpiders = new List<SpiderModel>();
     }
 
     private async Task GameOver()
     {
-        _pageIsActive = false;
+        PageIsActive = false;
 
         RepositoryService.Instance.AddScore(_score);
         var scoreRepository = RepositoryService.Instance.GetHighScore();
@@ -171,7 +173,6 @@ internal class GameViewModel : BaseViewModel
         });
     }
 
-
     internal void SetPosition(float width, float height)
     {
         TapPoint = _hydra.CurrentPoint = new Vector2(width / 2, height / 2);
@@ -181,9 +182,10 @@ internal class GameViewModel : BaseViewModel
         _gameFieldWidth = width;
     }
 
-    internal void StartAnimationLoop(BindableObject view, ISKCanvasView hydraCanvas, ISKCanvasView spiderCanvas)
+    internal void StartAnimationLoop(BindableObject view, ISKCanvasView hydraCanvas, ISKCanvasView spiderCanvas,
+        ISKCanvasView deadSpiders)
     {
-        _pageIsActive = true;
+        PageIsActive = true;
 
         view.Dispatcher.StartTimer(TimeSpan.FromMilliseconds(AnimationCycleTime), () =>
         {
@@ -193,9 +195,25 @@ internal class GameViewModel : BaseViewModel
             Satiety -= StarvePerSecond;
             ComboProgressBarPercents -= ComboPerSecond;
 
+            if (_deadSpiders.Count > 0)
+            {
+                deadSpiders.InvalidateSurface();
+            }
+
+            for (var i = 0; i < _deadSpiders.Count; i++)
+            {
+                if (_deadSpiders[i].Color.Alpha <= 0)
+                {
+                    _deadSpiders.RemoveAt(i);
+                    continue;
+                }
+
+                _deadSpiders[i].Color = new SKColor(0, 0, 0, (byte)(_deadSpiders[i].Color.Alpha - 15));
+            }
+
             _hydra.AnimationIndex++;
 
-            return _pageIsActive;
+            return PageIsActive;
         });
     }
 
@@ -210,6 +228,7 @@ internal class GameViewModel : BaseViewModel
                 if (_spiders[i].AnimationIndex >= _spiders[i].CurrentTileSets.Body.TilesCount - 1 &&
                     _spiders[i].CurrentState == SpiderState.Die)
                 {
+                    _deadSpiders.Add(_spiders[i]);
                     _spiders.RemoveAt(i);
                     break;
                 }
@@ -242,13 +261,13 @@ internal class GameViewModel : BaseViewModel
                 }
             }
 
-            return _pageIsActive;
+            return PageIsActive;
         });
     }
 
     internal void StartSpawnLoop(BindableObject view)
     {
-        _pageIsActive = true;
+        PageIsActive = true;
         view.Dispatcher.StartTimer(TimeSpan.FromMilliseconds(SpawnCycleTime), () =>
         {
             if (_spiders.Count < SpiderLimit && _gameFieldWidth != 0 && _gameFieldHeight != 0)
@@ -269,7 +288,7 @@ internal class GameViewModel : BaseViewModel
 
             Score += Factor;
 
-            return _pageIsActive;
+            return PageIsActive;
         });
     }
 
@@ -282,17 +301,39 @@ internal class GameViewModel : BaseViewModel
 
         foreach (var spider in _spiders)
         {
+            var paint = new SKPaint { Color = spider.Color };
             canvas.DrawBitmap(spider.CurrentTileSets.Shadow.TilesBitmap,
                 spider.CurrentTileSets.Shadow.TilesData[spider.AnimationIndex].TileRect,
-                spider.ScaleRect);
+                spider.ScaleRect, paint);
             canvas.DrawBitmap(spider.CurrentTileSets.Body.TilesBitmap,
                 spider.CurrentTileSets.Body.TilesData[spider.AnimationIndex].TileRect,
-                spider.ScaleRect);
+                spider.ScaleRect, paint);
 #if DEBUG
             canvas.DrawRect(spider.HitBox, DebugPaint);
 #endif
 
             spider.AnimationIndex++;
+        }
+    }
+
+    public void DeadSpiderCanvasPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
+    {
+        var surface = args.Surface;
+        var canvas = surface.Canvas;
+
+        canvas.Clear();
+
+        foreach (var spider in _deadSpiders)
+        {
+            var paint = new SKPaint { Color = spider.Color };
+
+            canvas.DrawBitmap(spider.CurrentTileSets.Body.TilesBitmap,
+                spider.CurrentTileSets.Body.TilesData[spider.AnimationIndex].TileRect,
+                spider.ScaleRect, paint);
+
+            canvas.DrawBitmap(spider.CurrentTileSets.Shadow.TilesBitmap,
+                spider.CurrentTileSets.Shadow.TilesData[spider.AnimationIndex].TileRect,
+                spider.ScaleRect, paint);
         }
     }
 
